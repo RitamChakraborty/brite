@@ -1,3 +1,5 @@
 #!/bin/bash
 
-echo 'brite'
+str="brite"
+size=${#str}
+echo "Size of $str is $size"
