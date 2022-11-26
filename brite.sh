@@ -1,5 +1,8 @@
 #!/bin/bash
 
-str="brite"
-size=${#str}
-echo "Size of $str is $size"
+if [ $# -eq 0 ] 
+then
+    echo "No arguments supplied"
+else 
+    echo "Argument supplied $1"
+fi
