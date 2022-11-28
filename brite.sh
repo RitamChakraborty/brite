@@ -2,7 +2,17 @@
 
 if [ $# -eq 0 ] 
 then
-    echo "No arguments supplied"
-else 
-    echo "Argument supplied $1"
+  echo "Display current display and brightness"
+else
+  while getopts "gi" opt
+  do
+      case $opt in
+        (i) # Increase brightness
+          echo "Increase brightness" ;;
+        (d) # Decrease brightness
+          echo "Decrease brightness" ;;
+        (*) # Unknown option
+          printf "Illegal option '-%s'\n" "$opt" && exit 1 ;;
+      esac
+  done
 fi
