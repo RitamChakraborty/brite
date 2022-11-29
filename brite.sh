@@ -24,13 +24,21 @@ then
 EOF
 fi
 
-function DISPLAY_CURRENT_BRIGHTNESS() {
-  CURRENT_BRIGHTNESS=$(
+function GET_CURRENT_BRIGHTNESS() {
+  local CURRENT_BRIGHTNESS=$(
 sqlite3 brite.db <<EOF 
   SELECT brightness FROM record;
 EOF
 )
-  echo "$DISPLAY is set to brightness $CURRENT_BRIGHTNESS"
+  echo $CURRENT_BRIGHTNESS
+}
+
+function DISPLAY_CURRENT_BRIGHTNESS() {
+  echo "$DISPLAY is set to brightness $(GET_CURRENT_BRIGHTNESS)"
+}
+
+function CHANGE_BRIGHTNESS() {
+  echo "Value : $1"
 }
 
 if [ $# -eq 0 ] 
@@ -42,7 +50,7 @@ else
 
   if [ $HYPHEN_INDEX -eq 0 ]
   then
-    echo "Change brightness to $ARG"
+    CHANGE_BRIGHTNESS $ARG
   else
     while getopts "id" opt
     do
