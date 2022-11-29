@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DISPLAY=$(xrandr -q | grep ' connected' | head -n 1 | cut -d ' ' -f1)
+SCREEN=($(xrandr -q | grep ' connected' | head -n 1 | cut -d ' ' -f1))
 
 sqlite3 brite.db <<EOF
 CREATE TABLE IF NOT EXISTS record  (
@@ -20,7 +20,7 @@ if [ $RECORD_COUNT -eq 0 ]
 then
   sqlite3 brite.db <<EOF
     INSERT INTO record (display, brightness)
-    VALUES ("$DISPLAY", 1);
+    VALUES ("$SCREEN", 1);
 EOF
 fi
 
@@ -33,17 +33,18 @@ EOF
   echo $CURRENT_BRIGHTNESS
 }
 
-function DISPLAY_CURRENT_BRIGHTNESS() {
-  echo "$DISPLAY is set to brightness $(GET_CURRENT_BRIGHTNESS)"
+function SCREEN_CURRENT_BRIGHTNESS() {
+  echo "$SCREEN is set to brightness $(GET_CURRENT_BRIGHTNESS)"
 }
 
 function CHANGE_BRIGHTNESS() {
-  echo "Value : $1"
+  xrandr --output $SCREEN --brightness $1
+  echo
 }
 
 if [ $# -eq 0 ] 
 then
-  DISPLAY_CURRENT_BRIGHTNESS
+  SCREEN_CURRENT_BRIGHTNESS
 else
   ARG=$1
   HYPHEN_INDEX=`expr "$ARG" : '-'`
@@ -65,6 +66,3 @@ else
     done
   fi
 fi
-
-# randr -q | grep ' connected' | head -n 1 | cut -d ' ' -f1
-# xrandr --output eDP-1 --brightness 1
