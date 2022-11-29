@@ -10,6 +10,12 @@ CREATE TABLE IF NOT EXISTS record  (
 );
 EOF
 
+RECORD_COUNT=$(
+sqlite3 brite.db <<EOF 
+  SELECT COUNT(*) FROM record; 
+EOF
+)
+
 if [ $# -eq 0 ] 
 then
   echo "Display current display and brightness"
