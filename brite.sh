@@ -2,6 +2,14 @@
 
 DISPLAY=$(xrandr -q | grep ' connected' | head -n 1 | cut -d ' ' -f1)
 
+sqlite3 brite.db <<EOF
+CREATE TABLE IF NOT EXISTS record  (
+  id INTEGER PRIMARY KEY,
+  display TEXT NOT NULL,
+  brightness NUMERIC NOT NULL
+);
+EOF
+
 if [ $# -eq 0 ] 
 then
   echo "Display current display and brightness"
@@ -26,3 +34,6 @@ else
     done
   fi
 fi
+
+# randr -q | grep ' connected' | head -n 1 | cut -d ' ' -f1
+# xrandr --output eDP-1 --brightness 1
