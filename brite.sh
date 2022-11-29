@@ -16,6 +16,14 @@ sqlite3 brite.db <<EOF
 EOF
 )
 
+if [ $RECORD_COUNT -eq 0 ]
+then
+  sqlite3 brite.db <<EOF
+    INSERT INTO record (display, brightness)
+    VALUES ("$DISPLAY", 1);
+EOF
+fi
+
 if [ $# -eq 0 ] 
 then
   echo "Display current display and brightness"
