@@ -24,9 +24,18 @@ then
 EOF
 fi
 
+function DISPLAY_CURRENT_BRIGHTNESS() {
+  CURRENT_BRIGHTNESS=$(
+sqlite3 brite.db <<EOF 
+  SELECT brightness FROM record;
+EOF
+)
+  echo "$DISPLAY is set to brightness $CURRENT_BRIGHTNESS"
+}
+
 if [ $# -eq 0 ] 
 then
-  echo "Display current display and brightness"
+  DISPLAY_CURRENT_BRIGHTNESS
 else
   ARG=$1
   HYPHEN_INDEX=`expr "$ARG" : '-'`
