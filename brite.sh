@@ -1,5 +1,7 @@
 #!/bin/bash
 
+DISPLAY=$(xrandr -q | grep ' connected' | head -n 1 | cut -d ' ' -f1)
+
 if [ $# -eq 0 ] 
 then
   echo "Display current display and brightness"
