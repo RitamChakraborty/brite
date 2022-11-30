@@ -1,5 +1,7 @@
 #!/bin/bash
 
+MIN_BRIGHTNESS=0
+MAX_BRIGHTNESS=100
 SCREEN=($(xrandr -q | grep ' connected' | head -n 1 | cut -d ' ' -f1))
 
 sqlite3 brite.db <<EOF
@@ -50,6 +52,52 @@ function CHANGE_BRIGHTNESS() {
   UPDATE_BRIGHTNESS $1
 }
 
+function INCREMENT_BRIGHTNESS() {
+  local CURRENT_BRIGHTNESS=$(GET_CURRENT_BRIGHTNESS)
+
+  if [ $(echo "$CURRENT_BRIGHTNESS != 100" | bc) -eq 1 ]
+  then
+    local NEW_BRIGHTNESS=0
+
+    if [ $(echo "$CURRENT_BRIGHTNESS >= 1" | bc) -eq 1 ]
+    then
+      NEW_BRIGHTNESS=$(($CURRENT_BRIGHTNESS+1))
+
+      if [ $(echo "$NEW_BRIGHTNESS > 100" | bc) -eq 1 ]
+      then
+        NEW_BRIGHTNESS=100
+      fi
+    else
+      NEW_BRIGHTNESS="$(echo $CURRENT_BRIGHTNESS + '0.1' | bc)"
+    fi
+
+    CHANGE_BRIGHTNESS $NEW_BRIGHTNESS
+  fi
+}
+
+function DECREMENT_BRIGHTNESS() {
+  local CURRENT_BRIGHTNESS=$(GET_CURRENT_BRIGHTNESS)
+
+  if [ $(echo "$CURRENT_BRIGHTNESS != 0" | bc) -eq 1 ]
+  then
+    local NEW_BRIGHTNESS=0
+
+    if [ $(echo "$CURRENT_BRIGHTNESS > 1" | bc) -eq 1 ]
+    then
+      NEW_BRIGHTNESS=$(($CURRENT_BRIGHTNESS-1))
+    else
+      NEW_BRIGHTNESS="$(echo $CURRENT_BRIGHTNESS - '0.1' | bc)"
+      
+      if [ $(echo "$NEW_BRIGHTNESS < 0" | bc) -eq 1 ]
+      then
+        NEW_BRIGHTNESS=0
+      fi
+    fi
+
+    CHANGE_BRIGHTNESS $NEW_BRIGHTNESS
+  fi
+}
+
 if [ $# -eq 0 ] 
 then
   SCREEN_CURRENT_BRIGHTNESS
@@ -64,11 +112,11 @@ else
     while getopts "id" opt
     do
       case $opt in
-        (i) # Increase brightness
-          echo "Increase brightness" ;;
-        (d) # Decrease brightness
-          echo "Decrease brightness" ;;
-        (*) # Unknown option
+        (i)
+          INCREMENT_BRIGHTNESS ;;
+        (d)
+          DECREMENT_BRIGHTNESS ;;
+        (*)
           echo "Try 'brite --help' for more information."
           exit 1
       esac
