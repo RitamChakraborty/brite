@@ -37,8 +37,18 @@ function SCREEN_CURRENT_BRIGHTNESS() {
   echo "$SCREEN is set to brightness $(GET_CURRENT_BRIGHTNESS)"
 }
 
+function UPDATE_BRIGHTNESS() {
+    sqlite3 brite.db <<EOF
+    UPDATE record
+    SET brightness=$1
+    WHERE display='$SCREEN';
+EOF
+  echo
+}
+
 function CHANGE_BRIGHTNESS() {
   xrandr --output $SCREEN --brightness $1
+  UPDATE_BRIGHTNESS $1
   echo
 }
 
