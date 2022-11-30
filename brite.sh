@@ -43,13 +43,11 @@ function UPDATE_BRIGHTNESS() {
     SET brightness=$1
     WHERE display='$SCREEN';
 EOF
-  echo
 }
 
 function CHANGE_BRIGHTNESS() {
   xrandr --output $SCREEN --brightness $1
   UPDATE_BRIGHTNESS $1
-  echo
 }
 
 if [ $# -eq 0 ] 
