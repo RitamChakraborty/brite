@@ -57,20 +57,7 @@ function INCREMENT_BRIGHTNESS() {
 
   if [ $(echo "$CURRENT_BRIGHTNESS != $MAX_BRIGHTNESS" | bc) -eq 1 ]
   then
-    local NEW_BRIGHTNESS=0
-
-    if [ $(echo "$CURRENT_BRIGHTNESS >= 1" | bc) -eq 1 ]
-    then
-      NEW_BRIGHTNESS=$(($CURRENT_BRIGHTNESS+1))
-
-      if [ $(echo "$NEW_BRIGHTNESS > $MAX_BRIGHTNESS" | bc) -eq 1 ]
-      then
-        NEW_BRIGHTNESS=$MAX_BRIGHTNESS
-      fi
-    else
-      NEW_BRIGHTNESS="$(echo $CURRENT_BRIGHTNESS + '0.1' | bc)"
-    fi
-
+    local NEW_BRIGHTNESS="$(echo $CURRENT_BRIGHTNESS + '0.1' | bc)"
     CHANGE_BRIGHTNESS $NEW_BRIGHTNESS
   fi
 }
@@ -80,20 +67,7 @@ function DECREMENT_BRIGHTNESS() {
 
   if [ $(echo "$CURRENT_BRIGHTNESS != $MIN_BRIGHTNESS" | bc) -eq 1 ]
   then
-    local NEW_BRIGHTNESS=0
-
-    if [ $(echo "$CURRENT_BRIGHTNESS > 1" | bc) -eq 1 ]
-    then
-      NEW_BRIGHTNESS=$(($CURRENT_BRIGHTNESS-1))
-    else
-      NEW_BRIGHTNESS="$(echo $CURRENT_BRIGHTNESS - '0.1' | bc)"
-      
-      if [ $(echo "$NEW_BRIGHTNESS < $MIN_BRIGHTNESS" | bc) -eq 1 ]
-      then
-        NEW_BRIGHTNESS=$MIN_BRIGHTNESS
-      fi
-    fi
-
+    local NEW_BRIGHTNESS="$(echo $CURRENT_BRIGHTNESS - '0.1' | bc)"
     CHANGE_BRIGHTNESS $NEW_BRIGHTNESS
   fi
 }
