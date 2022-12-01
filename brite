@@ -98,7 +98,7 @@ else
         d) DECREMENT_BRIGHTNESS ;;
         h) HELP ;;
         ?)
-          echo "Try 'brite -h' for more information."
+          echo -e "Try 'brite -h' for more information."
           exit 1
       esac
     done
