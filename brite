@@ -75,7 +75,7 @@ function DECREMENT_BRIGHTNESS() {
 function HELP() {
   printf "usage: brite [options]\n"
   printf "where options are:\n"
-  printf "\t<value>\tset brightness to certain value\n"
+  printf "\t<value>\tset brightness to certain value [%s-%s]\n" $MIN_BRIGHTNESS $MAX_BRIGHTNESS
   printf "\t-d\tdecrease brightness by 0.1\n"
   printf "\t-i\tincrease brightness by 0.1\n"
 }
@@ -89,7 +89,12 @@ else
 
   if [ $HYPHEN_INDEX -eq 0 ]
   then
-    CHANGE_BRIGHTNESS $ARG
+    if [[ $(echo "$ARG > $MAX_BRIGHTNESS" | bc) -eq 1 || $(echo "$ARG -lt $MIN_BRIGHTNESS" | bc) -eq 1 ]]
+    then
+      HELP
+    else
+      CHANGE_BRIGHTNESS $ARG
+    fi
   else
     while getopts "idh" opt
     do
