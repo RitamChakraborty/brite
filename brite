@@ -72,6 +72,14 @@ function DECREMENT_BRIGHTNESS() {
   fi
 }
 
+function HELP() {
+  printf "usage: brite [options]\n"
+  printf "where options are:\n"
+  printf "\t<value>\tset brightness to certain value\n"
+  printf "\t-d\tdecrease brightness by 0.1\n"
+  printf "\t-i\tincrease brightness by 0.1\n"
+}
+
 if [ $# -eq 0 ] 
 then
   SCREEN_CURRENT_BRIGHTNESS
@@ -83,15 +91,14 @@ else
   then
     CHANGE_BRIGHTNESS $ARG
   else
-    while getopts "id" opt
+    while getopts "idh" opt
     do
       case $opt in
-        (i)
-          INCREMENT_BRIGHTNESS ;;
-        (d)
-          DECREMENT_BRIGHTNESS ;;
-        (*)
-          echo "Try 'brite --help' for more information."
+        i) INCREMENT_BRIGHTNESS ;;
+        d) DECREMENT_BRIGHTNESS ;;
+        h) HELP ;;
+        ?)
+          echo "Try 'brite -h' for more information."
           exit 1
       esac
     done
